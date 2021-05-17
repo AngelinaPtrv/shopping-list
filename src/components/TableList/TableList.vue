@@ -26,7 +26,7 @@
           <tr
               v-for="(item) in props.items"
               :key="item.id"
-              :style="item.checked ? {'color': color } : ''"
+              :class="item.checked ? 'item__check' : ''"
           >
             <template>
               <td
@@ -37,7 +37,7 @@
                   <v-checkbox
                     v-model="item.checked"
                     color="gray"
-                    @click="changeColor"
+                    @change="changeList(props.items)"
                   ></v-checkbox>
                 </template>
                 <v-edit-dialog
@@ -106,13 +106,8 @@ export default {
 
   methods: {
     markDone() {
-      this.$store.dispatch('markDone');
-    },
-
-    changeColor() {
-      if (this.color === 'black') {
-        this.color = 'grey'
-      }
+      this.$store.dispatch('markDone')
+        .then((list) => this.changeList(list))
     },
 
     changeList(items) {
@@ -128,6 +123,10 @@ export default {
 
 <style scoped>
 .v-data-table > .v-data-table__wrapper > table > tbody > tr > td {
-  padding: 0;
+  padding: 0 2px;
+}
+
+.item__check {
+  color: #c4c4c4;
 }
 </style>

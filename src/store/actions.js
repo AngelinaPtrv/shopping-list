@@ -152,6 +152,7 @@ const actions = {
     });
     list = list.concat(array);
     commit('setList', list);
+    return list;
   },
 
   deleteList({state, commit}, el) {
