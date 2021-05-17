@@ -1,6 +1,8 @@
 <template>
   <v-container>
-    <v-row justify="center">
+    <v-row
+        justify="center"
+    >
       <v-col cols="4">
         <v-text-field
             label="Наименование"
@@ -26,7 +28,7 @@
             v-model="units"
         ></v-select>
       </v-col>
-      <v-col cols="1">
+      <v-col cols="2">
         <v-btn
             depressed
             elevation="5"
@@ -98,6 +100,7 @@ export default {
 
   methods: {
     toAddProduct() {
+      console.log(this.$vuetify.breakpoint)
       this.$store.dispatch('addNewRow');
     }
   },
