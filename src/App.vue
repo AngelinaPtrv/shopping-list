@@ -1,27 +1,46 @@
 <template>
   <v-app class="app">
-    <v-card
-        class="overflow-hidden"
-        height="1000px"
-    >
-      <Navigation></Navigation>
-      <v-main>
+    <v-card class="overflow-hidden d-flex wrap">
+      <Navigation :navigationList="navigationList"></Navigation>
+      <v-main
+          class="d-flex justify-center align-center wrap_content"
+      >
         <router-view></router-view>
       </v-main>
     </v-card>
   </v-app>
 </template>
+
 <script>
 
-import Navigation from "./components/Navigation/Navigation";
+import Navigation from './components/Navigation/Navigation';
 
 export default {
   components: {
     Navigation,
+  },
+
+
+  created() {
+    this.$store.dispatch('fillNavigationList')
+  },
+
+  computed: {
+    navigationList() {
+      return this.$store.getters.getNavigation
+    }
   }
 };
 </script>
 
-<style>
+<style scoped>
+.wrap_content {
+  flex: 2 1;
+}
 
+@media (max-width: 540px) {
+  .wrap {
+    flex-direction: column;
+  }
+}
 </style>

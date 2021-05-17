@@ -1,46 +1,52 @@
 <template>
   <v-container>
     <v-data-table
-        :items="foundItem"
+        class="table"
+        :items="list"
         disable-pagination
         hide-default-footer
         hide-default-header
     >
       <template v-slot:top>
         <v-container class="d-flex justify-end">
-          <v-btn>
-            <v-icon>mdi-pencil</v-icon>
-          </v-btn>
-          <v-btn @click="markDone">
-            <v-icon>mdi-delete</v-icon>
+          <v-btn
+              small
+              @click="markDone"
+          >
+            <v-icon>mdi-cart-check</v-icon>
           </v-btn>
         </v-container>
       </template>
       <template v-slot:body="props">
-        <draggable :list="props.items" tag="tbody">
+        <v-banner
+            elevation="24"
+            v-if="list.length === 0"
+        >Добавьте покупки</v-banner>
+        <draggable :list="props.items" tag="tbody" @end="changeList(props.items)">
           <tr
               v-for="(item) in props.items"
-              :key="item.name"
+              :key="item.id"
               :style="item.checked ? {'color': color } : ''"
           >
-            <td>
-              <template>
-                <v-checkbox
-                    v-model="item.checked"
-                    color="gray"
-                ></v-checkbox>
-              </template>
-            </td>
             <template>
               <td
-                  v-for="row in item"
-                  :key="row"
+                  v-for="(row, name) in item"
+                  :key="name"
               >
+                <template v-if="typeof row === 'boolean'">
+                  <v-checkbox
+                    v-model="item.checked"
+                    color="gray"
+                    @click="changeColor"
+                  ></v-checkbox>
+                </template>
                 <v-edit-dialog
-                    :return-value.sync="row"
+                    v-if="name !== 'id' && name !== 'checked'"
+                    @close="changeList(props.items)"
                 > {{ row }}
                   <template v-slot:input>
                     <v-text-field
+                        type="text"
                         v-model="item.name"
                     ></v-text-field>
                     <v-text-field
@@ -56,6 +62,12 @@
                   </template>
                 </v-edit-dialog>
               </td>
+              <td>
+                <v-icon
+                    color="black"
+                    @click="deleteItem(item.id)"
+                >mdi-cart-remove</v-icon>
+              </td>
             </template>
           </tr>
         </draggable>
@@ -65,16 +77,18 @@
 </template>
 
 <script>
-import draggable from "vuedraggable";
+
+import draggable from 'vuedraggable';
+
 export default {
-  name: "TableList",
+  name: 'TableList',
+
   components : {
     draggable
   },
 
   props: {
-    list: Array,
-    search: String
+    list: Array
   },
 
   data () {
@@ -83,53 +97,37 @@ export default {
       color: 'black'
     }
   },
-  computed: {
-    foundItem() {
-      return this.dataTable.filter((item) => {
-            return item.name && item.name.toLowerCase().includes(this.search.toLowerCase())
-          }
-      );
-    },
 
+  computed: {
     gottenUnits() {
-      let units = [];
-      this.dataTable.forEach((item) => {
-        if (!units.includes(item.units)) {
-          units.push(item.units);
-        }
-      });
-      return units;
+      return this.$store.getters.getUnits;
     }
   },
 
   methods: {
     markDone() {
-      let indexes = [];
-      this.dataTable.forEach((item, index) => {
-        if (item.checked === true) {
-          indexes.push(index);
-        }
-      });
-      let array = this.dataTable.filter(item => item.checked === true);
-      let count = 0;
-      indexes.forEach(idx => {
-        this.dataTable.splice(idx - count, 1);
-        count++;
-      });
-      this.dataTable = this.dataTable.concat(array);
-      this.changeColor();
+      this.$store.dispatch('markDone');
     },
 
     changeColor() {
       if (this.color === 'black') {
         this.color = 'grey'
       }
+    },
+
+    changeList(items) {
+      this.$store.dispatch('changeList', items)
+    },
+
+    deleteItem(id) {
+      this.$store.dispatch('deleteRow', id)
     }
   }
-
 }
 </script>
 
 <style scoped>
-
+.v-data-table > .v-data-table__wrapper > table > tbody > tr > td {
+  padding: 0;
+}
 </style>
