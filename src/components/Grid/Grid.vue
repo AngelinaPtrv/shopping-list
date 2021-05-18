@@ -16,12 +16,12 @@
         <v-icon small v-if="order">mdi-arrow-down</v-icon>
       </v-btn>
     </v-container>
-    <section class="d-flex">
+    <v-container class="d-flex ">
       <TableList :list="foundList"></TableList>
-    </section>
-    <section class="new d-flex justify-space-around">
+    </v-container>
+    <v-container class="new d-flex justify-space-around">
       <AddPanel></AddPanel>
-    </section>
+    </v-container>
   </v-container>
 </template>
 

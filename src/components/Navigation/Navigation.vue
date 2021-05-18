@@ -2,7 +2,7 @@
   <v-container
       class="d-flex flex-column navigation"
   >
-    <v-container class="d-flex justify-space-between align-center">
+    <v-container class="d-flex justify-center align-center">
       <v-text-field
           class="navigation_input"
           label="Новый список"
@@ -134,7 +134,7 @@ export default {
 }
 
 .navigation_input {
-  max-width: 70%;
+  max-width: 60%;
 }
 
 .navigation_lists {

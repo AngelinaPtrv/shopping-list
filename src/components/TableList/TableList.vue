@@ -14,6 +14,7 @@
         >Добавьте покупки</v-banner>
         <draggable :list="props.items" tag="tbody" @end="changeList(props.items)">
           <tr
+              class="tr"
               v-for="(item) in props.items"
               :key="item.id"
               :class="item.checked ? 'item__check' : ''"
@@ -21,6 +22,7 @@
               <td
                   v-for="(row, name) in item"
                   :key="name"
+                  class="td"
               >
                 <template v-if="typeof row === 'boolean'">
                   <v-checkbox
@@ -105,6 +107,27 @@ export default {
 </script>
 
 <style scoped>
+.table {
+  table-layout: fixed;
+  width: 100%;
+  height: 210px;
+  overflow-y: scroll;
+}
+
+.td:nth-child(1) {
+  width: 4%;
+}
+
+.td:nth-child(4) {
+  width: 7%;
+}
+.td:nth-child(2),
+.td:nth-child(5) {
+  width: 10%
+}
+.td:nth-child(3) {
+  width: 60%;
+}
 .v-data-table > .v-data-table__wrapper > table > tbody > tr > td {
   padding: 0 2px;
 }
@@ -112,4 +135,5 @@ export default {
 .item__check {
   color: #c4c4c4;
 }
+
 </style>
