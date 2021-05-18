@@ -130,7 +130,7 @@ export default {
 <style scoped>
 .navigation {
   flex: 1 1;
-  max-width: 30%;
+  max-width: 40%;
 }
 
 .navigation_input {
