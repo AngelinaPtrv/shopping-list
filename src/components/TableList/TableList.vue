@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="pa-0">
     <v-data-table
         class="table"
         :items="list"
@@ -7,16 +7,6 @@
         hide-default-footer
         hide-default-header
     >
-      <template v-slot:top>
-        <v-container class="d-flex justify-end">
-          <v-btn
-              small
-              @click="markDone"
-          >
-            <v-icon>mdi-cart-check</v-icon>
-          </v-btn>
-        </v-container>
-      </template>
       <template v-slot:body="props">
         <v-banner
             elevation="24"
@@ -28,7 +18,6 @@
               :key="item.id"
               :class="item.checked ? 'item__check' : ''"
           >
-            <template>
               <td
                   v-for="(row, name) in item"
                   :key="name"
@@ -68,7 +57,6 @@
                     @click="deleteItem(item.id)"
                 >mdi-cart-remove</v-icon>
               </td>
-            </template>
           </tr>
         </draggable>
       </template>
@@ -105,11 +93,6 @@ export default {
   },
 
   methods: {
-    markDone() {
-      this.$store.dispatch('markDone')
-        .then((list) => this.changeList(list))
-    },
-
     changeList(items) {
       this.$store.dispatch('changeList', items)
     },

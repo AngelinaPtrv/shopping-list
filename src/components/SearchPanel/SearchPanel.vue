@@ -1,6 +1,6 @@
 <template>
   <v-text-field
-      class="flex-grow-0 flex-shrink-0"
+      class="field"
       v-model="find"
       append-icon="mdi-magnify"
       label="Найти"
@@ -26,5 +26,7 @@ export default {
 </script>
 
 <style scoped>
-
+.field {
+  max-width: 70%;
+}
 </style>

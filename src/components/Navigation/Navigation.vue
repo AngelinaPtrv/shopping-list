@@ -1,9 +1,10 @@
 <template>
   <v-container
-      class="d-flex flex-column wrap"
+      class="d-flex flex-column navigation"
   >
     <v-container class="d-flex justify-space-between align-center">
       <v-text-field
+          class="navigation_input"
           label="Новый список"
           v-model="newList"
           :error-messages="errorMessageNewList"
@@ -11,10 +12,11 @@
       <v-btn
           x-small
           @click="addNewList"
-      >+
+      >
+        <v-icon small>mdi-basket-plus-outline</v-icon>
       </v-btn>
     </v-container>
-    <v-container class="lists mt-5">
+    <v-container class="navigation_lists mt-5">
       <p
           v-if="navigationList.length === 0"
           class="text-center"
@@ -126,12 +128,16 @@ export default {
 </script>
 
 <style scoped>
-.wrap {
+.navigation {
   flex: 1 1;
   max-width: 30%;
 }
 
-.lists {
+.navigation_input {
+  max-width: 70%;
+}
+
+.navigation_lists {
   display: table;
   border-bottom: 1px solid black;
   padding: 0;
@@ -174,7 +180,7 @@ export default {
 }
 
 @media (max-width: 540px) {
-  .wrap {
+  .navigation {
     max-width: 90%;
   }
 }

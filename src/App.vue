@@ -1,6 +1,8 @@
 <template>
   <v-app class="app">
-    <v-card class="overflow-hidden d-flex wrap">
+    <v-card
+        class="overflow-hidden d-flex wrap mx-auto"
+    >
       <Navigation :navigationList="navigationList"></Navigation>
       <v-main
           class="d-flex justify-center align-center wrap_content"
@@ -34,6 +36,10 @@ export default {
 </script>
 
 <style scoped>
+.wrap {
+  max-width: 90vw;
+  margin-top: 16px;
+}
 .wrap_content {
   flex: 2 1;
 }
@@ -41,6 +47,8 @@ export default {
 @media (max-width: 540px) {
   .wrap {
     flex-direction: column;
+    max-width: 100vw;
+    margin-top: 0;
   }
 }
 </style>
