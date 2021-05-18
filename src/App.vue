@@ -5,7 +5,7 @@
     >
       <Navigation :navigationList="navigationList"></Navigation>
       <v-main
-          class="d-flex justify-center align-center wrap_content"
+          class="wrap_content"
       >
         <router-view></router-view>
       </v-main>
@@ -40,7 +40,9 @@ export default {
   min-width: 80vw;
   max-width: 90vw;
   margin-top: 16px;
+  min-height: 70vh;
 }
+
 .wrap_content {
   flex: 2 1;
 }
@@ -49,6 +51,7 @@ export default {
   .wrap {
     flex-direction: column;
     max-width: 100vw;
+    height: auto;
     margin-top: 0;
   }
 }

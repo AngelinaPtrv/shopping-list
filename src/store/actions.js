@@ -89,7 +89,9 @@ const actions = {
   },
 
   sortList({state, commit}) {
-    const list = state.list;
+    let list = [];
+    let checkedList = [];
+    state.list.forEach(item => item.checked ? checkedList.push(item) : list.push(item))
     let order = state.sort.order;
     if (order) {
       list.sort((a, b) => toCompareList(a, b));
@@ -98,6 +100,7 @@ const actions = {
       list.sort((a, b) => toCompareList(b, a));
       order = 1;
     }
+    list = list.concat(checkedList);
     commit('setList', list);
     commit('setOrder', order);
     setLocalStorage(state.currentTitle, list);

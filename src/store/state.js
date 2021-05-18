@@ -2,7 +2,7 @@ const state = {
     navigationList: [],
     currentTitle: '',
     list: [],
-    units: ['шт', 'кг', 'упак', 'бут'],
+    units: ['шт', 'кг', 'упак', 'бут', 'бан'],
     newList: {
       title: '',
       errorMessage: ''
