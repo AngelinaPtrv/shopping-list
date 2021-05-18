@@ -1,6 +1,6 @@
 <template>
-  <v-container>
-    <v-container class="modify d-flex flex-row-reverse justify-space-between align-center">
+  <v-container class="d-flex flex-column wrap_grid">
+    <v-container class="d-flex flex-row justify-space-around align-center">
         <v-btn
             x-small
             @click="markDone"
@@ -16,7 +16,7 @@
         <v-icon small v-if="order">mdi-arrow-down</v-icon>
       </v-btn>
     </v-container>
-    <v-container class="d-flex ">
+    <v-container class="d-flex wrap_grid__table">
       <TableList :list="foundList"></TableList>
     </v-container>
     <v-container class="new d-flex justify-space-around">
@@ -66,5 +66,11 @@ export default {
 </script>
 
 <style scoped>
+.wrap_grid__table {
+  height: 70%;
+}
 
+.wrap_grid {
+  height: 100%;
+}
 </style>

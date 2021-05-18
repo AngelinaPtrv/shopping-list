@@ -11,7 +11,7 @@
         <v-banner
             elevation="24"
             v-if="list.length === 0"
-        >Добавьте покупки</v-banner>
+        >Продукты не найдены</v-banner>
         <draggable :list="props.items" tag="tbody" @end="changeList(props.items)">
           <tr
               class="tr"
@@ -110,7 +110,6 @@ export default {
 .table {
   table-layout: fixed;
   width: 100%;
-  height: 210px;
   overflow-y: scroll;
 }
 
