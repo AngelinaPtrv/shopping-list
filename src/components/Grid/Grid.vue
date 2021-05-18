@@ -1,11 +1,19 @@
 <template>
   <v-container>
-    <v-container class="modify d-flex justify-space-around align-center">
+    <v-container class="modify d-flex flex-row-reverse justify-space-between align-center">
+        <v-btn
+            x-small
+            @click="markDone"
+        >
+          <v-icon small>mdi-cart-check</v-icon>
+        </v-btn>
       <SearchPanel></SearchPanel>
       <v-btn
-          small
+          x-small
           @click="getSortList"
-      >По имени
+      >
+        <v-icon small v-if="!order">mdi-arrow-up</v-icon>
+        <v-icon small v-if="order">mdi-arrow-down</v-icon>
       </v-btn>
     </v-container>
     <section class="d-flex">
@@ -31,6 +39,12 @@ export default {
     AddPanel
   },
 
+  data() {
+    return {
+      order: 0
+    }
+  },
+
   computed: {
     foundList() {
       return this.$store.getters.getFoundList;
@@ -39,7 +53,13 @@ export default {
 
   methods: {
     getSortList() {
-      this.$store.dispatch('sortList');
+      this.$store.dispatch('sortList')
+          .then(order => this.order = order)
+    },
+
+    markDone() {
+      this.$store.dispatch('markDone')
+          .then((list) => this.$store.dispatch('changeList', list))
     }
   }
 }

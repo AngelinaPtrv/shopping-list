@@ -101,6 +101,7 @@ const actions = {
     commit('setList', list);
     commit('setOrder', order);
     setLocalStorage(state.currentTitle, list);
+    return order;
   },
 
   validateNewList({state, commit}) {
