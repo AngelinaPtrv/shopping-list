@@ -110,7 +110,6 @@ export default {
 .table {
   table-layout: fixed;
   width: 100%;
-  overflow-y: scroll;
 }
 
 .td:nth-child(1) {

@@ -1,18 +1,20 @@
 import uniqueId from 'lodash.uniqueid';
 import {tablesData} from '@/data';
 
-const toCompareList = function (a, b) {
+const NAVIGATION_LIST = 'navigationList';
+
+const comparator = function (a, b) {
   return a.name > b.name ? 1 : a.name === b.name ? 0 : -1;
 };
 
 const validateField = function (param, commit, applyError) {
   if (!param) {
-    commit(applyError, 'Error');
+    commit(applyError, 'Заполните поле');
   }
   return !param;
 };
 
-const setLocalStorage = function (name, data) {
+const fillLocalStorage = function (name, data) {
   localStorage.setItem(name, JSON.stringify(data));
 };
 
@@ -20,70 +22,83 @@ const getFromLocalStorage = function (name) {
   return JSON.parse(localStorage.getItem(name));
 }
 
-const findNavigationList = function () {
+const getTableDataNavigationList = function () {
   return tablesData.map(item => item.navigation);
+};
+
+const getCurrentTableFromTableData = (title) => {
+  const currentObject = tablesData.find((td) =>
+    td.navigation.title.toLowerCase() === title);
+  const currentTable = currentObject.list;
+  fillLocalStorage(title, currentTable);
+  return currentTable;
+};
+
+const createNewNavigationListItem = (state) => {
+  return {
+    navigation: {
+      title: state.newList.title,
+      url: `${state.newList.title.toLowerCase()}`
+    },
+    list: []
+  };
+};
+
+const createRowItem = (state) => {
+  return {
+    id: uniqueId(`${state.currentTitle}-`),
+    checked: false,
+    name: state.newRow.name,
+    quantity: state.newRow.quantity,
+    units: state.newRow.units,
+  };
 };
 
 const actions = {
   fillNavigationList({commit}) {
     let navigationList = [];
-    if (localStorage.getItem('navigationList')) {
-      navigationList = getFromLocalStorage('navigationList')
+    if (localStorage.getItem(NAVIGATION_LIST)) {
+      navigationList = getFromLocalStorage(NAVIGATION_LIST)
     } else {
-      navigationList = findNavigationList();
-      setLocalStorage('navigationList', navigationList);
+      navigationList = getTableDataNavigationList();
+      fillLocalStorage(NAVIGATION_LIST, navigationList);
     }
     commit('setNavigationList', navigationList);
   },
 
   setCurrentTable({commit}, title) {
+    const lowerTitle = title ? title.toLowerCase() : '';
+    let currentTable = [];
     if (title) {
-      const lowerTitle = title.toLowerCase();
-      let currentTable = [];
-      if (localStorage.getItem(`${lowerTitle}`)) {
-        currentTable = getFromLocalStorage(`${lowerTitle}`)
-      } else {
-        const currentObject = tablesData.find((td) =>
-          td.navigation.title.toLowerCase() === lowerTitle);
-        currentTable = currentObject.list;
-        setLocalStorage(lowerTitle, currentTable);
-      }
-      commit('setList', currentTable);
-      commit('setCurrentTitle', lowerTitle);
-    } else {
-      commit('setList', []);
-      commit('setCurrentTitle', '');
+      currentTable = localStorage.getItem(`${lowerTitle}`)
+        ? getFromLocalStorage(`${lowerTitle}`)
+        : getCurrentTableFromTableData(lowerTitle);
     }
+    commit('setList', currentTable);
+    commit('setCurrentTitle', lowerTitle);
   },
 
   getFirstTab() {
-    let navigationList = getFromLocalStorage('navigationList');
+    let navigationList = getFromLocalStorage(NAVIGATION_LIST);
     return navigationList && navigationList[0] && navigationList[0].title && navigationList[0].title.toLowerCase();
   },
 
 
   async addNewList({state, dispatch, commit}) {
-    let newList = {};
     if (await dispatch('validateNewList')) {
-      newList = {
-        navigation: {
-          title: state.newList.title,
-          url: `${state.newList.title.toLowerCase()}`
-        },
-        list: []
-      };
-      if (getFromLocalStorage('navigationList')) {
-        const array = getFromLocalStorage('navigationList');
-        array.push(newList.navigation);
-        setLocalStorage('navigationList', array);
+      let newListItem = createNewNavigationListItem(state);
+      let navigationList = getFromLocalStorage(NAVIGATION_LIST)
+      if (navigationList) {
+        navigationList.push(newListItem.navigation);
       } else {
-        tablesData.push(newList);
-        setLocalStorage('navigationList', findNavigationList());
+        tablesData.push(newListItem);
+        navigationList = getTableDataNavigationList()
       }
-      setLocalStorage(`${newList.navigation.title.toLowerCase()}`, []);
-      commit('setNavigationList', getFromLocalStorage('navigationList'));
+      fillLocalStorage(NAVIGATION_LIST, navigationList);
+      fillLocalStorage(`${newListItem.navigation.title.toLowerCase()}`, []);
+      commit('setNavigationList', navigationList);
       commit('setTitleOfNewList', '');
-      return newList.navigation.url;
+      return newListItem.navigation.url;
     }
     return state.navigationList[0].url;
   },
@@ -93,25 +108,17 @@ const actions = {
     let checkedList = [];
     state.list.forEach(item => item.checked ? checkedList.push(item) : list.push(item))
     let order = state.sort.order;
-    if (order) {
-      list.sort((a, b) => toCompareList(a, b));
-      order = 0;
-    } else {
-      list.sort((a, b) => toCompareList(b, a));
-      order = 1;
-    }
+    list.sort((a, b) => order ? comparator(a, b) : comparator(b, a));
     list = list.concat(checkedList);
     commit('setList', list);
-    commit('setOrder', order);
-    setLocalStorage(state.currentTitle, list);
+    commit('setOrder', 1 - order);
+    fillLocalStorage(state.currentTitle, list);
     return order;
   },
 
   validateNewList({state, commit}) {
-    let hasError = false;
     let duplicate = state.navigationList.find(item => item.title.toLowerCase() === state.newList.title.toLowerCase());
-    hasError = hasError || validateField(state.newList.title, commit, 'setErrorList') || validateField(!duplicate, commit, 'setErrorList');
-    return !hasError;
+    return !(validateField(state.newList.title, commit, 'setErrorList') || validateField(!duplicate, commit, 'setErrorList'));
   },
 
   validateNewRow({state, commit}) {
@@ -123,25 +130,19 @@ const actions = {
   },
 
   async addNewRow({state, commit, dispatch}) {
-      const list = state.list;
-      if (await dispatch('validateNewRow')) {
-        list.push({
-          id: uniqueId(`${state.currentTitle}-`),
-          checked: false,
-          name: state.newRow.name,
-          quantity: state.newRow.quantity,
-          units: state.newRow.units,
-        });
-        commit('setNewName', '');
-        commit('setNewQuantity', '');
-        commit('setNewUnits', '');
-        commit('setList', list);
-      }
-      setLocalStorage(state.currentTitle, state.list);
+    const list = state.list;
+    if (await dispatch('validateNewRow')) {
+      list.push(createRowItem(state));
+      commit('setNewName', '');
+      commit('setNewQuantity', '');
+      commit('setNewUnits', '');
+      commit('setList', list);
+    }
+    fillLocalStorage(state.currentTitle, state.list);
   },
 
   changeList({state}, list) {
-    setLocalStorage(state.currentTitle, list);
+    fillLocalStorage(state.currentTitle, list);
   },
 
   markDone({state, commit}) {
@@ -162,14 +163,14 @@ const actions = {
   deleteList({state, commit}, el) {
     const list = state.navigationList.filter(item => item.title !== el);
     commit('setNavigationList', list);
-    setLocalStorage('navigationList', list);
+    fillLocalStorage(NAVIGATION_LIST, list);
     localStorage.removeItem(el.toLowerCase());
   },
 
   deleteRow({state, commit}, id) {
     const list = state.list.filter(item => item.id !== id);
     commit('setList', list);
-    setLocalStorage(state.currentTitle, list);
+    fillLocalStorage(state.currentTitle, list);
   }
 };
 

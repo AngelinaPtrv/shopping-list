@@ -10,7 +10,7 @@
           :error-messages="errorMessageNewList"
       ></v-text-field>
       <v-btn
-          x-small
+          small
           @click="addNewList"
       >
         <v-icon small>mdi-basket-plus-outline</v-icon>
@@ -87,7 +87,7 @@ export default {
 
     addNewList() {
       this.$store.dispatch('addNewList')
-          .then((url) => this.$router.push({path: `/${url}/list`}))
+          .then(url => this.$router.push({path: `/${url}/list`}))
           .then(router => this.setList(router.params.url))
           .then(() => this.activeIndex = this.navigationList.findIndex(item => item.title.toLowerCase() === this.$route.params.url))
     },

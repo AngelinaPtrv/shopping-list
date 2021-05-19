@@ -3,7 +3,7 @@
     <v-row
         justify="space-between"
     >
-      <v-col cols="6">
+      <v-col cols="5">
         <v-text-field
             label="Наименование"
             dense
@@ -20,7 +20,7 @@
             :error-messages="errorMessageQuantityField"
         />
       </v-col>
-      <v-col cols="2">
+      <v-col cols="3">
         <v-select
             dense
             :items="gottenUnits"

@@ -2,14 +2,14 @@
   <v-container class="d-flex flex-column wrap_grid">
     <v-container class="d-flex flex-row justify-space-around align-center">
         <v-btn
-            x-small
+            small
             @click="markDone"
         >
           <v-icon small>mdi-cart-check</v-icon>
         </v-btn>
       <SearchPanel></SearchPanel>
       <v-btn
-          x-small
+          small
           @click="getSortList"
       >
         <v-icon small v-if="!order">mdi-arrow-up</v-icon>
