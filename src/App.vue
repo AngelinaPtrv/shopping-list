@@ -1,12 +1,8 @@
 <template>
   <v-app class="app">
-    <v-card
-        class="overflow-hidden d-flex wrap mx-auto"
-    >
-      <Navigation :navigationList="navigationList"></Navigation>
-      <v-main
-          class="wrap_content"
-      >
+    <v-card class="overflow-hidden d-flex wrap mx-auto">
+      <navigation-list :navigationList="navigationList" />
+      <v-main class="wrap_content">
         <router-view></router-view>
       </v-main>
     </v-card>
@@ -15,11 +11,11 @@
 
 <script>
 
-import Navigation from './components/Navigation/Navigation';
+import NavigationList from './components/Navigation/NavigationList';
 
 export default {
   components: {
-    Navigation,
+    NavigationList,
   },
 
 

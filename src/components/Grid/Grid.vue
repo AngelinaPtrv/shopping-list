@@ -7,7 +7,7 @@
         >
           <v-icon small>mdi-cart-check</v-icon>
         </v-btn>
-      <SearchPanel></SearchPanel>
+      <search-panel/>
       <v-btn
           small
           @click="getSortList"
@@ -17,10 +17,10 @@
       </v-btn>
     </v-container>
     <v-container class="d-flex wrap_grid__table">
-      <TableList :list="foundList"></TableList>
+      <table-list :list="foundList" />
     </v-container>
     <v-container class="new d-flex justify-space-around">
-      <AddPanel></AddPanel>
+      <add-panel />
     </v-container>
   </v-container>
 </template>
