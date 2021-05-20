@@ -1,8 +1,6 @@
 <template>
   <v-container class="px-0 py-3">
-    <v-row
-        justify="space-between"
-    >
+    <v-row justify="space-between">
       <v-col cols="5">
         <v-text-field
             label="Наименование"
@@ -28,7 +26,10 @@
             v-model="units"
         ></v-select>
       </v-col>
-      <v-col cols="2" class="d-flex justify-center pa-0 align-self-center">
+      <v-col
+          cols="2"
+          class="d-flex justify-center pa-0 align-self-center"
+      >
         <v-btn
             depressed
             elevation="5"
